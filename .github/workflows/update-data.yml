@@ -1,0 +1,73 @@
+name: update-data
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 2,5,8,11 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch Rajkot gold and silver rate
+        run: |
+          python3 - <<'PY'
+          import json, re, os, urllib.request, datetime
+
+          UA = {'User-Agent': 'Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 Chrome/120 Mobile Safari/537.36'}
+
+          def text(url):
+              r = urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=30)
+              h = r.read().decode('utf-8', 'ignore')
+              h = re.sub(r'(?is)<(script|style).*?</\1>', ' ', h)
+              h = re.sub(r'<[^>]+>', ' ', h)
+              return re.sub(r'\s+', ' ', h.replace('&#8377;', '₹').replace('&nbsp;', ' '))
+
+          def num(x):
+              return int(x.replace(',', ''))
+
+          gold = silver = None
+          try:
+              t = text('https://www.bankbazaar.com/gold-rate-rajkot.html')
+              i = t.find('24 Carat Gold Rate in Rajkot')
+              m = re.search(r'10 grams?\s*₹?\s*([\d,]+)', t[i:] if i >= 0 else t)
+              if m: gold = num(m.group(1))
+          except Exception as e:
+              print('gold error', e)
+          try:
+              t = text('https://www.bankbazaar.com/silver-rate-rajkot.html')
+              m = re.search(r'1 kg\s*₹?\s*([\d,]+)', t, re.I)
+              if m: silver = num(m.group(1))
+              else:
+                  m = re.search(r'1 gram\s*₹?\s*([\d,]+)', t, re.I)
+                  if m: silver = num(m.group(1)) * 1000
+          except Exception as e:
+              print('silver error', e)
+          print('gold', gold, 'silver', silver)
+
+          J = {}
+          if os.path.exists('data.json'):
+              try: J = json.load(open('data.json', encoding='utf-8'))
+              except Exception: J = {}
+          m = J.get('m') or {}
+          ist = datetime.datetime.utcnow() + datetime.timedelta(hours=5, minutes=30)
+          d = ist.strftime('%d/%m/%Y')
+          if gold and 50000 < gold < 1000000: m['gold'] = gold; m['gold_date'] = d
+          if silver and 50000 < silver < 2000000: m['silver'] = silver; m['silver_date'] = d
+          J['m'] = m
+          J['t'] = int(datetime.datetime.utcnow().timestamp() * 1000)
+          json.dump(J, open('data.json', 'w', encoding='utf-8'), ensure_ascii=False)
+          PY
+
+      - name: Commit data.json
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add data.json
+          git commit -m "update data.json" || echo "no change"
+          git push

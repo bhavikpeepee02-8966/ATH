@@ -64,7 +64,6 @@ const IDX=[
  {g:'in',k:'md',z:'in',n:'મિડકેપ 150',s:['NIFTYMIDCAP150.NS','^NIFTYMIDCAP150','NIFTYMID150.NS']},
  {g:'in',k:'sm',z:'in',n:'સ્મોલકેપ 250',s:['NIFTYSMLCAP250.NS','^NIFTYSMLCAP250','NIFTYSML250.NS']},
  {g:'in',k:'vx',z:'in',n:'India VIX (ડરનો આંક)',s:['^INDIAVIX']},
- {g:'in',k:'gf',n:'ગિફ્ટ નિફ્ટી',s:['^NIFTYGIFT','GIFTNIFTY.NS','NIFTYGIFT.NS']},
  {g:'us',k:'sp5',z:'us',n:'S&P 500',s:['^GSPC']},
  {g:'us',k:'nq',z:'us',n:'નાસ્ડેક',s:['^IXIC']},
  {g:'us',k:'dj',z:'us',n:'ડાઉ જોન્સ',s:['^DJI']},
@@ -78,7 +77,7 @@ const IDX=[
  {g:'kr',k:'kq',z:'kr',n:'કોરિયા — KOSDAQ',s:['^KQ11']},
  {g:'as',k:'nk',z:'jp',n:'જાપાન — નિક્કી 225',s:['^N225']},
  {g:'as',k:'hs',z:'hk',n:'હૉંગકૉંગ — હૅંગ સેંગ',s:['^HSI']},
- {g:'as',k:'sh',z:'cn',n:'ચીન — શાંઘાઈ',s:['^SSEC']},
+ {g:'as',k:'sh',z:'cn',n:'ચીન — શાંઘાઈ',s:['000001.SS','^SSEC']},
  {g:'as',k:'tw',z:'tw',n:'તાઇવાન — TAIEX',s:['^TWII']},
  {g:'as',k:'sg',z:'sg',n:'સિંગાપોર — STI',s:['^STI']},
  {g:'as',k:'au',z:'au',n:'ઑસ્ટ્રેલિયા — ASX 200',s:['^AXJO']},
@@ -175,7 +174,7 @@ async function fetchIdx(x){
   for(const sym of x.s){
     const u='https://query1.finance.yahoo.com/v8/finance/chart/'+encodeURIComponent(sym)+'?period1=946684800&period2='+(Math.floor(Date.now()/1000)+86400)+'&interval=1d';
     const j=await getJSON(u);
-    if(!j){last='ઇન્ટરનેટ/સર્વર જવાબ આપતું નથી';break}
+    if(!j){last='ઇન્ટરનેટ/સર્વર જવાબ આપતું નથી';continue}
     try{const v=proc(j);if(v&&v.cur&&v.hh)return v}catch(e){}
     last='આ સિમ્બોલનો ડેટા ખાલી ('+sym+')';
   }

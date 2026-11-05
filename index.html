@@ -152,17 +152,17 @@ function mkState(z,now){
   const cur=wk&&S.find(s=>L.min>=s[0]&&L.min<s[1]);
   const first=toUTC(tz,L.y,L.m,L.d,S[0][0]),last=toUTC(tz,L.y,L.m,L.d,S[S.length-1][1]);
   let open=!!cur,txt;
-  if(cur){txt='🟢 ચાલુ — બંધ થશે '+hm(toUTC(tz,L.y,L.m,L.d,cur[1]))+' IST'}
+  if(cur){txt='<b class="up">●</b> ચાલુ — બંધ થશે '+hm(toUTC(tz,L.y,L.m,L.d,cur[1]))+' IST'}
   else{
     let nx=null;
     if(wk){const s=S.find(s=>L.min<s[0]);if(s)nx=toUTC(tz,L.y,L.m,L.d,s[0])}
     for(let i=1;!nx&&i<=7;i++){const t=now+i*864e5,l=loc(tz,t);if(l.w>0&&l.w<6)nx=toUTC(tz,l.y,l.m,l.d,S[0][0])}
     const brk=wk&&L.min>S[0][0]&&L.min<S[S.length-1][1];
-    txt=(brk?'🟡 બપોરનો વિરામ':'🔴 બંધ')+' — ખુલશે '+(new Date(nx).toDateString()===new Date(now).toDateString()?'આજે':dy(nx))+' '+hm(nx)+' IST'}
+    txt=(brk?'<b style="color:var(--mid)">●</b> બપોરનો વિરામ':'<b class="dn">●</b> બંધ')+' — ખુલશે '+(new Date(nx).toDateString()===new Date(now).toDateString()?'આજે':dy(nx))+' '+hm(nx)+' IST'}
   return{open,txt:txt+' · સમય '+hm(first)+'–'+hm(last)+' IST'};
 }
 function mkTxt(z){const r=mkState(z,Date.now());return r?r.txt:''}
-function updMk(){document.querySelectorAll('.mk').forEach(e=>{e.textContent=mkTxt(e.dataset.z)})}
+function updMk(){document.querySelectorAll('.mk').forEach(e=>{e.innerHTML=mkTxt(e.dataset.z)})}
 function tabOpen(){
   if(tab==='cm')return true;
   const zs=[...new Set(IDX.filter(x=>x.g===tab&&x.z).map(x=>x.z))];

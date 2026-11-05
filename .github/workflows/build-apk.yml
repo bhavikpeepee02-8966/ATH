@@ -1,1 +1,158 @@
+name: Build ATH Tracker APK
 
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'index.html'
+      - '.github/workflows/build-apk.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Prepare web files
+        run: |
+          mkdir -p www
+          cp index.html www/index.html
+          [ -f data.json ] && cp data.json www/data.json || true
+
+      - name: Install Capacitor
+        run: |
+          [ -f package.json ] || npm init -y
+          npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6 @capacitor/splash-screen@6
+
+      - name: Capacitor config
+        run: |
+          cat > capacitor.config.json <<'EOF'
+          {
+            "appId": "io.github.bhavikpeepee02_8966.ath",
+            "appName": "ATH ટ્રેકર",
+            "webDir": "www",
+            "plugins": {
+              "CapacitorHttp": { "enabled": true },
+              "SplashScreen": {
+                "launchShowDuration": 2000,
+                "launchAutoHide": true,
+                "backgroundColor": "#121a17",
+                "showSpinner": false
+              }
+            }
+          }
+          EOF
+
+      - name: Add Android
+        run: npx cap add android
+
+      - name: Make icon and splash
+        run: |
+          pip install pillow
+          python3 - <<'PY'
+          import os, glob
+          from PIL import Image, ImageDraw, ImageFont
+
+          GREEN = (47, 125, 91, 255)
+          DARK = (18, 26, 23, 255)
+          WHITE = (255, 255, 255, 255)
+          GOLD = (224, 166, 58, 255)
+          RES = 'android/app/src/main/res'
+
+          def chart(sz, pad):
+              S = 4
+              N = sz * S
+              im = Image.new('RGBA', (N, N), (0, 0, 0, 0))
+              d = ImageDraw.Draw(im)
+              a = int(N * pad)
+              w = N - 2 * a
+              P = lambda x, y: (a + x * w, a + y * w)
+              pts = [P(0, .9), P(.18, .65), P(.32, .75), P(.6, .2), P(.78, .42), P(1, .36)]
+              lw = int(w * .09)
+              # ATH dashed line
+              y = P(0, .2)[1]
+              x = P(.6, 0)[0]
+              dash = int(w * .06)
+              while x < P(1, 0)[0]:
+                  d.line([(x, y), (min(x + dash, P(1, 0)[0]), y)], fill=GOLD, width=int(lw * .5))
+                  x += dash * 2
+              d.line(pts, fill=WHITE, width=lw, joint='curve')
+              for p in pts:
+                  d.ellipse([p[0] - lw / 2, p[1] - lw / 2, p[0] + lw / 2, p[1] + lw / 2], fill=WHITE)
+              return im
+
+          def legacy(sz, round_=False):
+              S = 4
+              N = sz * S
+              bg = Image.new('RGBA', (N, N), (0, 0, 0, 0))
+              m = Image.new('L', (N, N), 0)
+              md = ImageDraw.Draw(m)
+              if round_:
+                  md.ellipse([0, 0, N, N], fill=255)
+              else:
+                  md.rounded_rectangle([0, 0, N, N], radius=int(N * .22), fill=255)
+              bg.paste(Image.new('RGBA', (N, N), GREEN), (0, 0), m)
+              bg.alpha_composite(chart(sz, .22).resize((N, N)))
+              return bg.resize((sz, sz), Image.LANCZOS)
+
+          # launcher icons
+          dens = {'mdpi': 48, 'hdpi': 72, 'xhdpi': 96, 'xxhdpi': 144, 'xxxhdpi': 192}
+          for k, v in dens.items():
+              d = f'{RES}/mipmap-{k}'
+              if not os.path.isdir(d):
+                  continue
+              legacy(v).save(f'{d}/ic_launcher.png')
+              legacy(v, True).save(f'{d}/ic_launcher_round.png')
+              fg = chart(int(v * 108 / 48), .30)
+              fg.save(f'{d}/ic_launcher_foreground.png')
+
+          # adaptive icon background colour
+          bgx = f'{RES}/values/ic_launcher_background.xml'
+          if os.path.exists(bgx):
+              open(bgx, 'w').write('<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <color name="ic_launcher_background">#2f7d5b</color>\n</resources>\n')
+
+          # splash (start page)
+          def font(sz):
+              for p in ['/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf']:
+                  if os.path.exists(p):
+                      return ImageFont.truetype(p, sz)
+              return ImageFont.load_default()
+
+          for p in glob.glob(f'{RES}/**/splash*.png', recursive=True):
+              W, H = Image.open(p).size
+              im = Image.new('RGBA', (W, H), DARK)
+              lg = int(min(W, H) * .30)
+              im.alpha_composite(legacy(lg), ((W - lg) // 2, int(H * .5 - lg * .75)))
+              d = ImageDraw.Draw(im)
+              f1 = font(int(min(W, H) * .075))
+              f2 = font(int(min(W, H) * .038))
+              t1, t2 = 'ATH Tracker', 'Global Markets'
+              for t, f, y, c in [(t1, f1, H * .5 + lg * .45, WHITE), (t2, f2, H * .5 + lg * .45 + min(W, H) * .11, (151, 166, 157, 255))]:
+                  tw = d.textlength(t, font=f)
+                  d.text(((W - tw) / 2, y), t, font=f, fill=c)
+              im.convert('RGB').save(p)
+          print('assets done')
+          PY
+
+      - name: Sync
+        run: npx cap sync android
+
+      - name: Build debug APK
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ATH-Tracker-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk

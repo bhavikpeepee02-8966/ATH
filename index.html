@@ -188,7 +188,7 @@ async function load(){
   $('st').className='';$('st').textContent='અપડેટ થઈ રહ્યું છે…';
   const L=IDX.filter(x=>x.g===tab),nd={},ne={};let ok=0;
   let J=null;
-  try{const r=await tf('data.json?'+Date.now());if(r.ok)J=await r.json()}catch(e){}
+  for(const u of ['https://raw.githubusercontent.com/bhavikpeepee02-8966/ATH/main/data.json?','data.json?']){try{const r=await tf(u+Date.now());if(r.ok){J=await r.json();break}}catch(e){}}
   await Promise.all(L.map(async(x,i)=>{
     await wait(i*400);
     const sv=J&&J.d&&J.d[x.k];

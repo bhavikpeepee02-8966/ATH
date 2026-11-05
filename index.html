@@ -53,35 +53,35 @@ nav.tabs button.on{background:var(--ok);color:#fff;border-color:var(--ok)}
 </div>
 <p id="st">લોડ થઈ રહ્યું છે…</p>
 <div id="out"></div>
-<p class="foot">ડેટા: Yahoo Finance. એપ ખુલ્લી હોય ત્યારે માર્કેટ સમયે દર 5 મિનિટે અને બાકીના સમયે દર 6 કલાકે આપમેળે અપડેટ થાય છે; ATH દર વખતે આખા ઇતિહાસમાંથી નવેસરથી ગણાય છે. માત્ર માહિતી માટે.</p>
+<p class="foot">ડેટા: Yahoo Finance. એપ ખુલ્લી હોય ત્યારે માર્કેટ સમયે દર 5 મિનિટે અને બાકીના સમયે દર 6 કલાકે આપમેળે અપડેટ થાય છે; ATH દર વખતે આખા ઇતિહાસમાંથી નવેસરથી ગણાય છે. દરેક દેશનો સમય ભારતીય સમય (IST) મુજબ બતાવ્યો છે; સ્થાનિક રજાઓ ગણાતી નથી. માત્ર માહિતી માટે.</p>
 
 <script>
 const IDX=[
- {g:'in',k:'n50',n:'નિફ્ટી 50',s:['^NSEI','NIFTY50.NS']},
- {g:'in',k:'sx',n:'BSE સેન્સેક્સ',s:['^BSESN']},
- {g:'in',k:'bn',n:'બેંક નિફ્ટી',s:['^NSEBANK']},
- {g:'in',k:'n5',n:'નિફ્ટી 500',s:['^CRSLDX','NIFTY500.NS']},
- {g:'in',k:'md',n:'મિડકેપ 150',s:['NIFTYMIDCAP150.NS','^NIFTYMIDCAP150','NIFTYMID150.NS']},
- {g:'in',k:'sm',n:'સ્મોલકેપ 250',s:['NIFTYSMLCAP250.NS','^NIFTYSMLCAP250','NIFTYSML250.NS']},
- {g:'in',k:'vx',n:'India VIX (ડરનો આંક)',s:['^INDIAVIX']},
+ {g:'in',k:'n50',z:'in',n:'નિફ્ટી 50',s:['^NSEI','NIFTY50.NS']},
+ {g:'in',k:'sx',z:'in',n:'BSE સેન્સેક્સ',s:['^BSESN']},
+ {g:'in',k:'bn',z:'in',n:'બેંક નિફ્ટી',s:['^NSEBANK']},
+ {g:'in',k:'n5',z:'in',n:'નિફ્ટી 500',s:['^CRSLDX','NIFTY500.NS']},
+ {g:'in',k:'md',z:'in',n:'મિડકેપ 150',s:['NIFTYMIDCAP150.NS','^NIFTYMIDCAP150','NIFTYMID150.NS']},
+ {g:'in',k:'sm',z:'in',n:'સ્મોલકેપ 250',s:['NIFTYSMLCAP250.NS','^NIFTYSMLCAP250','NIFTYSML250.NS']},
+ {g:'in',k:'vx',z:'in',n:'India VIX (ડરનો આંક)',s:['^INDIAVIX']},
  {g:'in',k:'gf',n:'ગિફ્ટ નિફ્ટી',s:['^NIFTYGIFT','GIFTNIFTY.NS','NIFTYGIFT.NS']},
- {g:'us',k:'sp5',n:'S&P 500',s:['^GSPC']},
- {g:'us',k:'nq',n:'નાસ્ડેક',s:['^IXIC']},
- {g:'us',k:'dj',n:'ડાઉ જોન્સ',s:['^DJI']},
- {g:'us',k:'ru',n:'રસેલ 2000 (સ્મોલકેપ)',s:['^RUT']},
- {g:'us',k:'uvx',n:'US VIX (ડરનો આંક)',s:['^VIX']},
- {g:'eu',k:'ftse',n:'બ્રિટન — FTSE 100',s:['^FTSE']},
- {g:'eu',k:'dax',n:'જર્મની — DAX',s:['^GDAXI']},
- {g:'eu',k:'cac',n:'ફ્રાન્સ — CAC 40',s:['^FCHI']},
- {g:'eu',k:'stx',n:'યુરો સ્ટોક્સ 50',s:['^STOXX50E']},
- {g:'kr',k:'ks',n:'કોરિયા — KOSPI',s:['^KS11']},
- {g:'kr',k:'kq',n:'કોરિયા — KOSDAQ',s:['^KQ11']},
- {g:'as',k:'nk',n:'જાપાન — નિક્કી 225',s:['^N225']},
- {g:'as',k:'hs',n:'હૉંગકૉંગ — હૅંગ સેંગ',s:['^HSI']},
- {g:'as',k:'sh',n:'ચીન — શાંઘાઈ',s:['^SSEC']},
- {g:'as',k:'tw',n:'તાઇવાન — TAIEX',s:['^TWII']},
- {g:'as',k:'sg',n:'સિંગાપોર — STI',s:['^STI']},
- {g:'as',k:'au',n:'ઑસ્ટ્રેલિયા — ASX 200',s:['^AXJO']},
+ {g:'us',k:'sp5',z:'us',n:'S&P 500',s:['^GSPC']},
+ {g:'us',k:'nq',z:'us',n:'નાસ્ડેક',s:['^IXIC']},
+ {g:'us',k:'dj',z:'us',n:'ડાઉ જોન્સ',s:['^DJI']},
+ {g:'us',k:'ru',z:'us',n:'રસેલ 2000 (સ્મોલકેપ)',s:['^RUT']},
+ {g:'us',k:'uvx',z:'us',n:'US VIX (ડરનો આંક)',s:['^VIX']},
+ {g:'eu',k:'ftse',z:'uk',n:'બ્રિટન — FTSE 100',s:['^FTSE']},
+ {g:'eu',k:'dax',z:'de',n:'જર્મની — DAX',s:['^GDAXI']},
+ {g:'eu',k:'cac',z:'de',n:'ફ્રાન્સ — CAC 40',s:['^FCHI']},
+ {g:'eu',k:'stx',z:'de',n:'યુરો સ્ટોક્સ 50',s:['^STOXX50E']},
+ {g:'kr',k:'ks',z:'kr',n:'કોરિયા — KOSPI',s:['^KS11']},
+ {g:'kr',k:'kq',z:'kr',n:'કોરિયા — KOSDAQ',s:['^KQ11']},
+ {g:'as',k:'nk',z:'jp',n:'જાપાન — નિક્કી 225',s:['^N225']},
+ {g:'as',k:'hs',z:'hk',n:'હૉંગકૉંગ — હૅંગ સેંગ',s:['^HSI']},
+ {g:'as',k:'sh',z:'cn',n:'ચીન — શાંઘાઈ',s:['^SSEC']},
+ {g:'as',k:'tw',z:'tw',n:'તાઇવાન — TAIEX',s:['^TWII']},
+ {g:'as',k:'sg',z:'sg',n:'સિંગાપોર — STI',s:['^STI']},
+ {g:'as',k:'au',z:'au',n:'ઑસ્ટ્રેલિયા — ASX 200',s:['^AXJO']},
  {g:'cm',k:'gd',n:'સોનું 24K (10 ગ્રામ) — ભુજ/રાજકોટ',s:['GOLDBEES.NS'],m:'gold'},
  {g:'cm',k:'sv',n:'ચાંદી (1 કિલો) — ભુજ/રાજકોટ',s:['SILVERBEES.NS'],m:'silver'},
  {g:'cm',k:'br',n:'ક્રૂડ ઓઇલ — બ્રેન્ટ ($/બૅરલ)',s:['BZ=F']},
@@ -139,6 +139,35 @@ function proc(j){
   if(cur>hh){hh=cur}
   if(cur>hc){hc=cur}
   return{cur,prev,hh,hc,hhd,hcd,sp:rows.slice(-250).map(r=>+r[1].toFixed(2))};
+}
+
+// દેશોના માર્કેટ સમય (સ્થાનિક સમય) — ભારતીય સમય મુજબ બતાવવા
+const MK={in:['Asia/Kolkata',[[555,930]]],us:['America/New_York',[[570,960]]],uk:['Europe/London',[[480,990]]],de:['Europe/Berlin',[[540,1050]]],kr:['Asia/Seoul',[[540,930]]],jp:['Asia/Tokyo',[[540,690],[750,930]]],hk:['Asia/Hong_Kong',[[570,720],[780,960]]],cn:['Asia/Shanghai',[[570,690],[780,900]]],tw:['Asia/Taipei',[[540,810]]],sg:['Asia/Singapore',[[540,1020]]],au:['Australia/Sydney',[[600,960]]]};
+function tzOff(tz,t){const p=new Intl.DateTimeFormat('en-US',{timeZone:tz,hourCycle:'h23',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'}).formatToParts(new Date(t)).reduce((a,x)=>(a[x.type]=x.value,a),{});return Date.UTC(p.year,p.month-1,p.day,p.hour,p.minute,p.second)-Math.floor(t/1000)*1000}
+function loc(tz,t){const d=new Date(t+tzOff(tz,t));return{y:d.getUTCFullYear(),m:d.getUTCMonth(),d:d.getUTCDate(),w:d.getUTCDay(),min:d.getUTCHours()*60+d.getUTCMinutes()}}
+function toUTC(tz,y,m,d,min){const g=Date.UTC(y,m,d,0,min);return g-tzOff(tz,g)}
+const hm=t=>new Date(t).toLocaleTimeString('en-GB',{timeZone:'Asia/Kolkata',hour:'2-digit',minute:'2-digit'});
+const dy=t=>new Date(t).toLocaleDateString('gu-IN',{timeZone:'Asia/Kolkata',weekday:'short'});
+function mkState(z,now){
+  const m=MK[z];if(!m)return null;const tz=m[0],S=m[1],L=loc(tz,now),wk=L.w>0&&L.w<6;
+  const cur=wk&&S.find(s=>L.min>=s[0]&&L.min<s[1]);
+  const first=toUTC(tz,L.y,L.m,L.d,S[0][0]),last=toUTC(tz,L.y,L.m,L.d,S[S.length-1][1]);
+  let open=!!cur,txt;
+  if(cur){txt='🟢 ચાલુ — બંધ થશે '+hm(toUTC(tz,L.y,L.m,L.d,cur[1]))+' IST'}
+  else{
+    let nx=null;
+    if(wk){const s=S.find(s=>L.min<s[0]);if(s)nx=toUTC(tz,L.y,L.m,L.d,s[0])}
+    for(let i=1;!nx&&i<=7;i++){const t=now+i*864e5,l=loc(tz,t);if(l.w>0&&l.w<6)nx=toUTC(tz,l.y,l.m,l.d,S[0][0])}
+    const brk=wk&&L.min>S[0][0]&&L.min<S[S.length-1][1];
+    txt=(brk?'🟡 બપોરનો વિરામ':'🔴 બંધ')+' — ખુલશે '+(new Date(nx).toDateString()===new Date(now).toDateString()?'આજે':dy(nx))+' '+hm(nx)+' IST'}
+  return{open,txt:txt+' · સમય '+hm(first)+'–'+hm(last)+' IST'};
+}
+function mkTxt(z){const r=mkState(z,Date.now());return r?r.txt:''}
+function updMk(){document.querySelectorAll('.mk').forEach(e=>{e.textContent=mkTxt(e.dataset.z)})}
+function tabOpen(){
+  if(tab==='cm')return true;
+  const zs=[...new Set(IDX.filter(x=>x.g===tab&&x.z).map(x=>x.z))];
+  return zs.some(z=>{const r=mkState(z,Date.now());return r&&r.open});
 }
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 async function fetchIdx(x){
@@ -206,6 +235,7 @@ function render(ok){
     const warn=mon+(er?`<p class="foot" style="color:var(--bad);margin:0 0 8px">⚠ આ ઇન્ડેક્સ અપડેટ ન થયો: ${er}. છેલ્લો ડેટા: ${v.t?new Date(v.t).toLocaleString('gu-IN'):'ઑફલાઇન અંદાજ'}</p>`:'');
     return `<div class="card">${warn}
       <div class="top"><span class="nm">${x.n}</span><span class="pct" style="color:${col}">−${dd.toFixed(1)}%</span></div>
+      ${x.z?`<p class="foot mk" data-z="${x.z}" style="margin:2px 0 0">${mkTxt(x.z)}</p>`:''}
       <div class="track" role="img" aria-label="ATH થી ${dd.toFixed(1)}% નીચે"><div class="fill" style="width:${Math.min(100,dd*3)}%;background:${col}"></div></div>
       ${spark(v.sp,col)}
       <div class="two"><div><small>આજનું (લાઇવ)</small><b>${fmt(v.cur)}</b></div><div><small>ઑલ ટાઇમ હાઈ</small><b>${fmt(ath)}</b></div></div>
@@ -224,9 +254,9 @@ function inMarket(){
 function due(){
   if(!T0())return true;
   const age=Date.now()-T0();
-  return inMarket()?age>5*6e4:age>6*36e5;
+  return tabOpen()?age>5*6e4:age>6*36e5;
 }
-function tick(){if(due())load()}
+function tick(){if(due())load();else updMk()}
 $('rf').onclick=load;
 $('md').onchange=e=>{mode=e.target.value;try{localStorage.setItem(KEY+'m',mode)}catch(x){}render(T0()?1:0)};
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)tick()});
